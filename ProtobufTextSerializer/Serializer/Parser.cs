@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ProtobufTextSerializer
 {
@@ -6,6 +7,11 @@ namespace ProtobufTextSerializer
     {
         Lexer _lexer = new Lexer();
         Token _token;
+
+        
+        Message _msg;
+
+        Stack<Message> _msgStack = new Stack<Message>();
 
         public Parser( )
         {
@@ -17,9 +23,6 @@ namespace ProtobufTextSerializer
 
 
             _lexer.AddMatcher(new TokenMatcher(TokenType.Comma, ":"));
-            //_lexer.AddMatcher(new TokenMatcher(TokenType.DoubleQuote, "\""));
-            //_lexer.AddMatcher(new TokenMatcher(TokenType.SingleQuote, "'"));
-            _lexer.AddMatcher(new TokenMatcher(TokenType.Sub, "-"));
             _lexer.AddMatcher(new TokenMatcher(TokenType.LSqualBracket, "["));
             _lexer.AddMatcher(new TokenMatcher(TokenType.RSqualBracket, "]"));
             _lexer.AddMatcher(new TokenMatcher(TokenType.LBrace, "{"));
@@ -31,8 +34,10 @@ namespace ProtobufTextSerializer
             _lexer.AddMatcher(new UnknownMatcher());
         }
 
-        public void Merge( string src )
+        public void Merge( string src, Message msg )
         {
+            _msg = msg;
+
             _lexer.Start(src);
 
             Next();
@@ -56,7 +61,7 @@ namespace ProtobufTextSerializer
                         break;
                     case TokenType.LBrace:
                         {                            
-                            OnRepeatedBegin(key);
+                            OnMsgBegin(key);
 
                             Next();
                             continue;
@@ -76,13 +81,10 @@ namespace ProtobufTextSerializer
 
                 if ( _token.Type == TokenType.RBrace)
                 {
-                    OnRepeatedEnd();
+                    OnMsgEnd();
                     Next();
                 }                
                 
-
-
-
 
             } while (_token.Type != TokenType.EOF);
             
@@ -116,20 +118,23 @@ namespace ProtobufTextSerializer
 
 
 
-        void OnRepeatedBegin(string name)
-        {
 
+
+        void OnMsgBegin(string name)
+        {
+            _msgStack.Push(_msg);
+            _msg = _msg.AddMessage(name);
         }
 
 
         void OnSetValue(string name, string value )
         {
-
+            _msg.SetValue(name, value);
         }
 
-        void OnRepeatedEnd()
+        void OnMsgEnd()
         {
-
+            _msg = _msgStack.Pop();
         }
 
     }

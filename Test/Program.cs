@@ -10,10 +10,32 @@ namespace Test
 {    
     class Program
     {
+        class CharDefine
+        {
+            public CharDefine() { }
+            public int LastLoginUTC { get; set; }
+            public string CharName { get; set; }
+        }
+
+        class CharList
+        {
+            public CharList() { }
+
+            List<CharDefine> _info = new List<CharDefine>();
+            public List<CharDefine> CharInfo
+            {
+                get { return _info; }
+
+            }
+        }
+
         static void Main(string[] args)
         {
             var p = new Parser();
-            p.Merge("Info {Rank: -1 RewardID: 40020001 BoxIcon: \"hello\"}", new ClassSetter() );
+
+            var t = new CharList();
+
+            p.Merge("CharInfo {CharName: 'cat' LastLoginUTC: 123}  CharInfo {CharName: \"dog\" LastLoginUTC: 456}", new Message(t));
         }
     }
 }
