@@ -1,0 +1,6 @@
+*.suo
+/ProtobufTextSerializer/bin
+/ProtobufTextSerializer/obj
+/Test/bin
+/Test/obj
+/*.user 
