@@ -1,6 +1,6 @@
 ﻿
 
-namespace ProtobufTextSerializer
+namespace ProtobufText
 {
     public class TokenMatcher : Matcher
     {

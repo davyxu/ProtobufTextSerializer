@@ -55,6 +55,8 @@
     <Compile Include="Scanner\WhitespaceMatcher.cs" />
     <Compile Include="Serializer\Message.cs" />
     <Compile Include="Serializer\Parser.cs" />
+    <Compile Include="Serializer\Printer.cs" />
+    <Compile Include="Serializer\Serializer.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,4 +1,4 @@
-﻿namespace ProtobufTextSerializer
+﻿namespace ProtobufText
 {
 
     public class UnknownMatcher : Matcher

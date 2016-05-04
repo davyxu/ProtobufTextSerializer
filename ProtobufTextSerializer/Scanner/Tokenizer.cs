@@ -1,5 +1,5 @@
 ﻿
-namespace ProtobufTextSerializer
+namespace ProtobufText
 {
     public class Tokenizer
     {

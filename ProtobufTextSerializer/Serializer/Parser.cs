@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ProtobufTextSerializer
+namespace ProtobufText
 {
     public class Parser
     {

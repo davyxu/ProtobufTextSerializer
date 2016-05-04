@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ProtobufTextSerializer
+namespace ProtobufText
 {
     public class NumeralMatcher : Matcher
     {

@@ -1,6 +1,7 @@
 ﻿
 using System;
-namespace ProtobufTextSerializer
+
+namespace ProtobufText
 {
     public class Message
     {
