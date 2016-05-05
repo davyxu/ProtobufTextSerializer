@@ -7,8 +7,8 @@
     <ProjectGuid>{42EB314D-0951-4272-A5E5-C423D89D5C74}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Library</RootNamespace>
-    <AssemblyName>Library</AssemblyName>
+    <RootNamespace>ProtobufText</RootNamespace>
+    <AssemblyName>ProtobufText</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>

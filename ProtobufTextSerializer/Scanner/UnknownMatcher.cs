@@ -1,7 +1,7 @@
 ﻿namespace ProtobufText
 {
 
-    public class UnknownMatcher : Matcher
+    class UnknownMatcher : Matcher
     {
         public override Token Match(Tokenizer tz)
         {

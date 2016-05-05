@@ -2,7 +2,7 @@
 
 namespace ProtobufText
 {
-    public class TokenMatcher : Matcher
+    class TokenMatcher : Matcher
     {
         string _word;
         TokenType _type;

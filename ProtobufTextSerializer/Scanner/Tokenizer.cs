@@ -1,7 +1,7 @@
 ﻿
 namespace ProtobufText
 {
-    public class Tokenizer
+    class Tokenizer
     {
         string _source;
        

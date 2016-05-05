@@ -54,6 +54,13 @@ namespace Test
             }
 
             TestInOut(charlist);
+
+            // 字符串转义
+            var originalText = "Tick: 0 LastLoginUTC: 0 CharName: \"a\\rb\\nc\"";
+            var structOut = Serializer.Deserialize<CharDefine>(originalText);
+            var textOut = Serializer.Serialize(structOut).Trim();
+            Debug.Assert(originalText == textOut);
+
             
         }
 

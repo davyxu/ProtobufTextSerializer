@@ -2,7 +2,7 @@
 
 namespace ProtobufText
 {
-    public abstract class Matcher
+    abstract class Matcher
     {
         bool _ignore;
 

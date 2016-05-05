@@ -2,7 +2,7 @@
 
 namespace ProtobufText
 {    
-    public class WhitespaceMatcher : Matcher
+    class WhitespaceMatcher : Matcher
     {
         public static Token WhiteToken = new Token(TokenType.Whitespace, null);
 

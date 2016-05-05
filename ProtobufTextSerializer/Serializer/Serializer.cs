@@ -10,8 +10,7 @@ namespace ProtobufText
         static Printer _printer = new Printer();
 
         public static string Serialize<T>( T instance )
-        {
-            _printer.SingleLineMode = true;
+        {            
             return _printer.Print(instance);
         }
 

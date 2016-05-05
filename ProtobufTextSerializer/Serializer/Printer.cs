@@ -16,15 +16,9 @@ namespace ProtobufText
         /// </summary>
         public bool SingleLineMode { get; set; }
 
-        /// <summary>
-        /// 用缩略的repeated模式
-        /// </summary>
-        public bool UseShortRepeatedPrimitives { get; set; }
-
-
         public Printer( )
         {
-
+            SingleLineMode = true;
         }
 
         public string Print( object msg )
@@ -35,26 +29,6 @@ namespace ProtobufText
 
             return _builder.ToString();
         }
-
-        /// <summary>
-        /// 进入一个层次, 例如括号
-        /// </summary>
-        void In()
-        {
-            _indend += "\t";
-        }
-
-        /// <summary>
-        /// 退出一个层次
-        /// </summary>
-        void Out()
-        {
-            if (_indend.Length > 0)
-            {
-                _indend = _indend.Substring(1);
-            }
-        }
-
 
         void Iterate( object ins )
         {
@@ -139,36 +113,7 @@ namespace ProtobufText
             }
         }
 
-        void BeginLine( )
-        {
-            if (!SingleLineMode)
-            {
-                _builder.Append(_indend);
-            }
-        }
 
-        void EndLine( )
-        {
-            if ( !SingleLineMode)
-            {
-                _builder.Append("\n");
-            }
-        }
-
-        public void PrintLine(params object[] values)
-        {
-            BeginLine();
-            PrintValues(values);
-            EndLine();
-        }
-
-        public void PrintValues(params object[] values )
-        {
-            foreach (object obj in values)
-            {
-                _builder.Append(obj.ToString());
-            }
-        }
 
         void PrintFieldName(PropertyInfo prop)
         {
@@ -179,7 +124,7 @@ namespace ProtobufText
         {            
             if ( value.GetType() == typeof(string) )
             {
-                PrintValues("\"", value.ToString(), "\"");
+                PrintValues("\"", EscapeString(value.ToString()), "\"");
             }
             else
             {
@@ -187,6 +132,32 @@ namespace ProtobufText
             }
 
             PrintValues(" ");
+        }
+
+        string EscapeString( string str )
+        {
+            var sb = new StringBuilder();
+
+            foreach( var c in str )
+            {
+                switch (c)
+                {
+                    case '\n':
+                        sb.Append("\\n");
+                        break;
+                    case '\r':
+                        sb.Append("\\r");
+                        break;
+                    case '\"':
+                        sb.Append("\\\"");
+                        break;
+                    default:
+                        sb.Append( c );
+                        break;
+                }
+            }
+
+            return sb.ToString();
         }
         
 
@@ -201,6 +172,55 @@ namespace ProtobufText
             return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
         }
 
+
+        #region Printer Control
+
+        void In()
+        {
+            _indend += "\t";
+        }
+
+
+        void Out()
+        {
+            if (_indend.Length > 0)
+            {
+                _indend = _indend.Substring(1);
+            }
+        }
+
+        void BeginLine()
+        {
+            if (!SingleLineMode)
+            {
+                _builder.Append(_indend);
+            }
+        }
+
+        void EndLine()
+        {
+            if (!SingleLineMode)
+            {
+                _builder.Append("\n");
+            }
+        }
+
+        public void PrintLine(params object[] values)
+        {
+            BeginLine();
+            PrintValues(values);
+            EndLine();
+        }
+
+        public void PrintValues(params object[] values)
+        {
+            foreach (object obj in values)
+            {
+                _builder.Append(obj.ToString());
+            }
+        }
+
+        #endregion
 
     }
 }

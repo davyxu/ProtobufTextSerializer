@@ -2,7 +2,7 @@
 
 namespace ProtobufText
 {    
-    public class CommentMatcher : Matcher
+    class CommentMatcher : Matcher
     {
         public override Token Match(Tokenizer tz)
         {

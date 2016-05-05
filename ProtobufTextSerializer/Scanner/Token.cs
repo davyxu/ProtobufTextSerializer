@@ -1,7 +1,7 @@
 ﻿
 namespace ProtobufText
 {
-    public enum TokenType
+    enum TokenType
     {
         None,
         Unknown,
@@ -23,7 +23,7 @@ namespace ProtobufText
         LBrace,         // {
         RBrace,         // }
     }
-    public class Token
+    class Token
     {
         string _value;
         TokenType _type;
@@ -55,13 +55,4 @@ namespace ProtobufText
         }
     }
 
-    public class TokenPos
-    {
-        public int Pos;
-
-        public TokenPos(int line, int col)
-        {
-
-        }
-    }
 }

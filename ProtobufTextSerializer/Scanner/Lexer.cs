@@ -2,7 +2,7 @@
 
 namespace ProtobufText
 {
-    public class Lexer
+    class Lexer
     {
         IList<Matcher> _tokenmatcher = new List<Matcher>();
         IEnumerator<Token> _tokeniter;

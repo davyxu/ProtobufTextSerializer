@@ -1,9 +1,12 @@
 ﻿
 
+using System.Text;
 namespace ProtobufText
 {
-    public class StringMatcher : Matcher
+    class StringMatcher : Matcher
     {
+        StringBuilder _builder = new StringBuilder();
+
         public override Token Match(Tokenizer tz)
         {
             if (tz.Current != '"' && tz.Current != '\'')
@@ -11,19 +14,61 @@ namespace ProtobufText
 
             tz.Consume(1);
 
-            int beginIndex = tz.Index;
+            _builder.Length = 0;
+
+
+            bool escaping = false;
 
             do
             {
+                // 将转义符xian
+                if ( escaping )
+                {
+                    switch (tz.Current)
+                    {
+                        case 'n':
+                            {
+                                _builder.Append("\n");
+                            }
+                            break;
+                        case 'r':
+                            {
+                                _builder.Append("\r");
+                            }
+                            break;
+                        default:
+                            {
+                                _builder.Append('\\');
+                                _builder.Append(tz.Current);
+                            }
+                            break;
+                    }
+
+                    escaping = false;
+                }
+                else
+                {
+                    if ( tz.Current == '\\')
+                    {
+                        escaping = true;
+                    }
+                    else
+                    {
+                        _builder.Append(tz.Current);
+                    }
+                }
+
+  
+
+
                 tz.Consume();
 
             } while (tz.Current != '\n' && tz.Current != '\0' && tz.Current != '\'' && tz.Current != '"');
 
-            var endIndex = tz.Index;
 
             tz.Consume();
 
-            return new Token(TokenType.String, tz.Source.Substring(beginIndex, endIndex - beginIndex));
+            return new Token(TokenType.String, _builder.ToString());
         }
 
     }
