@@ -19,6 +19,12 @@ namespace Test
             public string CharName { get; set; }
         }
 
+        enum CharType
+        {
+            Power,
+            Magic,
+        }
+
         [Serializable()]  
         class CharList
         {
@@ -30,10 +36,25 @@ namespace Test
                 get { return _info; }
 
             }
+
+            public CharType CT { get; set; }
+
+            List<CharType> _multi = new List<CharType>();
+
+            public List<CharType> CTMulti { get { return _multi; } }
         }
 
         static void Main(string[] args)
-        {            
+        {
+
+            var commentText = @"
+CTMulti: Magic  CTMulti: Power
+            ";
+
+            var s = Serializer.Deserialize<CharList>(commentText);
+
+
+
             var charlist = new CharList();
 
             {
@@ -60,6 +81,9 @@ namespace Test
             var structOut = Serializer.Deserialize<CharDefine>(originalText);
             var textOut = Serializer.Serialize(structOut).Trim();
             Debug.Assert(originalText == textOut);
+
+
+
 
             
         }

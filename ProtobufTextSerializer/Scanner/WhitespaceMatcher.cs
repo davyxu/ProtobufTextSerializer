@@ -17,14 +17,19 @@ namespace ProtobufText
             int count = 0;
             for (; ; count++)
             {
-                if (!IsWhiteSpace(tz.Peek(count)))
+                var c = tz.Peek(count);
+
+                if ( c == '\n')
+                {
+                    tz.IncLine();
+                }
+
+                if (!IsWhiteSpace(c))
                     break;                
             }
 
             if (count == 0)
                 return null;
-
-            int beginIndex = tz.Index;
 
             tz.Consume( count );
 
