@@ -20,6 +20,10 @@ PBT格式比Json更简单, 且支持注释, 是一种良好的配置文件格式
 
 * 转义符只支持\r \n的常见转换
 
+# 库依赖
+
+https://github.com/davyxu/SharpLexer
+
 
 # 链接
 
