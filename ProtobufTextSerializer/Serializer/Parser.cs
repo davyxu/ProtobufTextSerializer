@@ -1,8 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using SharpLexer;
 
 namespace ProtobufText
 {
+    enum TokenType
+    {
+        Unknown = 0,
+        Numeral,
+        String,
+
+        Whitespace,
+        LineEnd,
+        Comment,
+
+        Identifier,
+
+
+        Comma,          // :
+        DoubleQuote,     // "
+        SingleQuote,     // '
+        LSqualBracket,   // [
+        RSqualBracket,   // ]
+        LBrace,         // {
+        RBrace,         // }
+    }
+
+
     public class Parser
     {
         Lexer _lexer = new Lexer();
@@ -15,23 +39,28 @@ namespace ProtobufText
 
         public Parser( )
         {
-            _lexer.AddMatcher(new NumeralMatcher());
-            _lexer.AddMatcher(new StringMatcher());
+            _lexer.AddMatcher(new NumeralMatcher((int)TokenType.Numeral));
+            _lexer.AddMatcher(new StringMatcher((int)TokenType.String));
 
-            _lexer.AddMatcher(new WhitespaceMatcher().Ignore());
-            _lexer.AddMatcher(new CommentMatcher().Ignore());
-
-
-            _lexer.AddMatcher(new TokenMatcher(TokenType.Comma, ":"));
-            _lexer.AddMatcher(new TokenMatcher(TokenType.LSqualBracket, "["));
-            _lexer.AddMatcher(new TokenMatcher(TokenType.RSqualBracket, "]"));
-            _lexer.AddMatcher(new TokenMatcher(TokenType.LBrace, "{"));
-            _lexer.AddMatcher(new TokenMatcher(TokenType.RBrace, "}"));
+            _lexer.AddMatcher(new WhitespaceMatcher((int)TokenType.Whitespace).Ignore());
+            _lexer.AddMatcher(new LineEndMatcher((int)TokenType.LineEnd).Ignore());
+            _lexer.AddMatcher(new UnixStyleCommentMatcher((int)TokenType.Comment).Ignore());
 
 
-            _lexer.AddMatcher(new IdentifierMatcher());
+            _lexer.AddMatcher(new SignMatcher((int)TokenType.Comma, ":"));
+            _lexer.AddMatcher(new SignMatcher((int)TokenType.LSqualBracket, "["));
+            _lexer.AddMatcher(new SignMatcher((int)TokenType.RSqualBracket, "]"));
+            _lexer.AddMatcher(new SignMatcher((int)TokenType.LBrace, "{"));
+            _lexer.AddMatcher(new SignMatcher((int)TokenType.RBrace, "}"));
 
-            _lexer.AddMatcher(new UnknownMatcher());
+            _lexer.AddMatcher(new IdentifierMatcher((int)TokenType.Identifier));
+
+            _lexer.AddMatcher(new UnknownMatcher((int)TokenType.Unknown));
+        }
+
+        TokenType GetTokenType( )
+        {
+            return (TokenType)_token.MatcherID;
         }
 
         public void Merge( string src, Message msg )
@@ -48,8 +77,7 @@ namespace ProtobufText
             {
                 key = _token.Value;
 
-
-                switch (_token.Type)
+                switch (GetTokenType())
                 {
                     case TokenType.Identifier:
                         {
@@ -57,7 +85,7 @@ namespace ProtobufText
 
                             bool isNormalValue = false;
 
-                            switch (_token.Type)
+                            switch (GetTokenType())
                             {
                                 case TokenType.Comma:
                                     {
@@ -84,7 +112,7 @@ namespace ProtobufText
 
                             Next();
 
-                            if (_token.Type == TokenType.RBrace)
+                            if (GetTokenType() == TokenType.RBrace)
                             {
                                 OnMsgEnd();
                                 Next();
@@ -99,17 +127,17 @@ namespace ProtobufText
                         break;
                 }
 
-               
-                
 
-            } while (_token.Type != TokenType.EOF);
+
+
+            } while (GetTokenType() != 0);
             
         }
 
 
         void Expect(TokenType t)
         {
-            if (_token.Type != t)
+            if (GetTokenType() != t)
             {
                 throw new Exception(string.Format("expect token: {0} @ {1}", t.ToString(), _lexer.ToString() ));
             }
@@ -132,16 +160,11 @@ namespace ProtobufText
             _token = _lexer.Read();
         }
 
-
-
-
-
         void OnMsgBegin(string name)
         {
             _msgStack.Push(_msg);
             _msg = _msg.AddMessage(name);
         }
-
 
         void OnSetValue(string name, string value )
         {
